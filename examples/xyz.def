@@ -1,0 +1,4 @@
+LIBRARY "xyz.dll"
+VERSION 1.0
+EXPORTS
+    vxPublishKernels

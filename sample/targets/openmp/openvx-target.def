@@ -1,0 +1,9 @@
+LIBRARY "openvx-openmp.dll"
+VERSION 1.0
+EXPORTS
+    vxTargetInit
+    vxTargetDeinit
+    vxTargetVerify
+    vxTargetProcess
+    vxTargetSupports
+    vxTargetAddKernel

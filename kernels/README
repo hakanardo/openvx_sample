@@ -1,0 +1,7 @@
+
+These libraries are "flat" OpenVX type-compliant implementations of the core
+vision functions, or "kernels". These kernels are shared between the 
+"sample-c" and the "sample-c++" implementations.
+
+c_model: flat kernels associated with language-specific kernels in sample/targets/c_model and sample-c++
+debug: flat kernels associated with language-specific kernels in extensions/debug and sample-c++

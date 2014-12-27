@@ -1,0 +1,21 @@
+require 'rubygems'
+require 'rake/extensiontask'
+require 'hoe'
+
+HOE = Hoe.spec 'openvx' do
+    developer 'Erik Rainey', 'erik.rainey@gmail.com'
+    group_name = "Khronos Group"
+    licenses = ["Khronos"]
+    extra_dev_deps << ['rake-compiler', '>= 0']
+    spec_extras = { :extensions => ["ext/openvx/extconf.rb"]}
+end
+
+HOE.spec.files -= [".gemtest"]
+
+Rake::ExtensionTask.new(HOE.name, HOE.spec) do |ext|
+    ext.lib_dir = File.join('lib','openvx')
+end
+
+
+#Rake::Task[:vx_test].prerequisites << :compile
+

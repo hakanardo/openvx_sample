@@ -1,0 +1,112 @@
+#
+# Copyright (c) 2011-2014 The Khronos Group Inc.
+#
+# Permission is hereby granted, free of charge, to any person obtaining a
+# copy of this software and/or associated documentation files (the
+# "Materials"), to deal in the Materials without restriction, including
+# without limitation the rights to use, copy, modify, merge, publish,
+# distribute, sublicense, and/or sell copies of the Materials, and to
+# permit persons to whom the Materials are furnished to do so, subject to
+# the following conditions:
+#
+# The above copyright notice and this permission notice shall be included
+# in all copies or substantial portions of the Materials.
+#
+# THE MATERIALS ARE PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+# EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+# MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+# IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+# CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+# TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+# MATERIALS OR THE USE OR OTHER DEALINGS IN THE MATERIALS.
+#
+
+#
+# Usage
+#     FILTER_SOURCES()
+#
+# Filters HEADER_FILES_1, EXPORT_HEADER_FILES_1 and SOURCE_FILES_1 variables to remove Win or Linux files
+# Creates HEADER_FILES, EXPORT_HEADER_FILES and SOURCE_FILES variables
+#
+macro( FILTER_SOURCES FILER_OUT_REGEXP )
+      if (WIN32)
+            foreach(FILE ${HEADER_FILES_TMP})
+                if ( NOT FILE MATCHES _linux AND NOT FILE MATCHES ${FILER_OUT_REGEXP})
+                        list(APPEND HEADER_FILES_TMP_2 ${FILE})
+                endif ( NOT FILE MATCHES _linux AND NOT FILE MATCHES ${FILER_OUT_REGEXP})
+            endforeach(FILE)
+
+            foreach(FILE ${SOURCE_FILES_TMP})
+                if ( NOT FILE MATCHES  ^stdafx[.]c.*$|_linux  AND NOT FILE MATCHES ${FILER_OUT_REGEXP})
+                        list(APPEND SOURCE_FILES_TMP_2 ${FILE})
+                endif ( NOT FILE MATCHES  ^stdafx[.]c.*$|_linux  AND NOT FILE MATCHES ${FILER_OUT_REGEXP})
+            endforeach(FILE)
+
+            list(APPEND SOURCE_FILES_TMP_2 ${RECOURCE_FILES_1})
+
+        else () # Linux
+
+            foreach(FILE ${HEADER_FILES_TMP})
+                if ( NOT FILE MATCHES ^resource[.]h$|^stdafx[.]h$|_windows|_win32 AND NOT FILE MATCHES ${FILER_OUT_REGEXP})
+                        list(APPEND HEADER_FILES_TMP_2 ${FILE})
+                endif ( NOT FILE MATCHES ^resource[.]h$|^stdafx[.]h$|_windows|_win32 AND NOT FILE MATCHES ${FILER_OUT_REGEXP})
+            endforeach(FILE)
+
+            foreach(FILE ${SOURCE_FILES_TMP})
+                if ( NOT FILE MATCHES ^stdafx[.]c.*$|_windows|_win32 AND NOT FILE MATCHES ${FILER_OUT_REGEXP})
+                        list(APPEND SOURCE_FILES_TMP_2 ${FILE})
+                endif ( NOT FILE MATCHES ^stdafx[.]c.*$|_windows|_win32 AND NOT FILE MATCHES ${FILER_OUT_REGEXP})
+            endforeach(FILE)
+
+      endif (WIN32)
+
+      if (DEFINED HEADER_FILES_TMP_2)
+          set (HEADER_FILES ${HEADER_FILES_TMP_2} PARENT_SCOPE)
+      endif (DEFINED HEADER_FILES_TMP_2)
+
+      if (DEFINED SOURCE_FILES_TMP_2)
+          set (SOURCE_FILES ${SOURCE_FILES_TMP_2} PARENT_SCOPE)
+      endif (DEFINED SOURCE_FILES_TMP_2)
+
+endmacro( FILTER_SOURCES )
+
+#
+# Usage
+#     FIND_SOURCES( )
+#
+# Creates HEADER_FILES, EXPORT_HEADER_FILES and SOURCE_FILES variables
+# by globbing CMAKE_CURRENT_SOURCE_DIR
+#
+function ( FIND_SOURCES )
+    file( GLOB HEADER_FILES_TMP RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} *.h *.hpp )
+    file( GLOB SOURCE_FILES_TMP RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} *.c *.cpp *.cc )
+	
+	if (${ARGC} EQUAL 0 )
+        set( FILER_OUT_REGEXP "not used regexp" )
+    else()
+        set( FILER_OUT_REGEXP ${ARGV0} )
+    endif (${ARGC} EQUAL  0 )
+
+    FILTER_SOURCES( ${FILER_OUT_REGEXP} )
+endfunction ( FIND_SOURCES )
+
+#
+# Usage
+#     FIND_NUM_PROCESSORS( )
+#
+# Creates NUM_PROCESSORS variable
+# by globbing CMAKE_CURRENT_SOURCE_DIR
+#
+function ( FIND_NUM_PROCESSORS )
+  set(PROCESSOR_COUNT_T 0)
+  if ( WIN32 )
+    set(PROCESSOR_COUNT_T "$ENV{NUMBER_OF_PROCESSORS}")
+  else ( WIN32 )
+	set(CPUINFO_FILE "/proc/cpuinfo")
+	if(EXISTS "${CPUINFO_FILE}")
+		file(STRINGS "${CPUINFO_FILE}" PROCS REGEX "^processor.: [0-9]+$")
+		list(LENGTH PROCS PROCESSOR_COUNT_T)
+	endif(EXISTS "${CPUINFO_FILE}")
+  endif( WIN32 )
+  set( PROCESSOR_COUNT ${PROCESSOR_COUNT_T} PARENT_SCOPE )
+endfunction ( FIND_NUM_PROCESSORS )
