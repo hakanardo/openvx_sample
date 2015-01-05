@@ -1,3 +1,21 @@
+*** 
+ 
+THIS BRANCH IS A MODIFICATIONS PATCH FOR BUILDING ON MACOS.
+
+IT IS DESIGNED TO ALLOW THE INCLUSION OF OPENVX_SAMPLE INTO HOMEBREW. 
+
+UNTIL SUCH TIME AS THIS IS MERGED/ACCEPTED.
+
+IN THE INTERIM PLEASE MANUALLY PERFORM:
+
+	> mkdir build
+	> cd build
+	> cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/path/to/install/to -DBUILD_X64=1
+  > make
+	> make install
+
+***
+
 ========================================================================
 OpenVX 1.0 Sample Implementation
 ========================================================================

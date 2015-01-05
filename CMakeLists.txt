@@ -51,6 +51,9 @@ set(CMAKE_CONFIGURATION_TYPES
   )
 set(CMAKE_CONFIGURATION_TYPES ${CMAKE_CONFIGURATION_TYPES} CACHE STRING "Available build configurations." FORCE)
 
+# TODO: added this to remove RPATH policy
+cmake_policy(SET CMP0042 NEW)
+
 option( OPENVX_USE_TILING OFF )
 option( EXPERIMENTAL_USE_NODE_MEMORY OFF )
 option( EXPERIMENTAL_USE_OPENMP OFF )
@@ -64,9 +67,11 @@ option( EXPERIMENTAL_PLATFORM_SUPPORTS_16_FLOAT OFF )
 
 if (UNIX OR ANDROID)
     add_definitions( -D_XOPEN_SOURCE=700 -D_BSD_SOURCE=1 -D_GNU_SOURCE=1 )
-    if (NOT (CYGWIN OR ANDROID))
-        set( EXPERIMENTAL_USE_OPENMP ON )
-    endif (NOT (CYGWIN OR ANDROID))
+	  # TODO: removed as was overriding openmp on macos
+		# There is no openmp for clang yet (see: http://clang-omp.github.io)	
+		#if (NOT (CYGWIN OR ANDROID))
+		#    set( EXPERIMENTAL_USE_OPENMP ON )
+		#endif (NOT (CYGWIN OR ANDROID))
     set( EXPERIMENTAL_USE_DOT ON )
 endif (UNIX OR ANDROID)
 

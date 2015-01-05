@@ -58,9 +58,10 @@ set (ADD_CXX_FLAGS              "${ADD_COMMON_C_FLAGS}" )
 
 # Linker switches
 
-if (NOT CYGWIN)
-    set (INIT_LINKER_FLAGS          "-Wl,--enable-new-dtags" ) # --enable-new-dtags sets RUNPATH to the same value as RPATH
-endif (NOT CYGWIN)
+# TODO: removed to stop use of --enable-new-dtags with Clang 
+#if (NOT CYGWIN)
+#    set (INIT_LINKER_FLAGS          "-Wl,--enable-new-dtags" ) # --enable-ne#w-dtags sets RUNPATH to the same value as RPATH
+#endif (NOT CYGWIN)
 
 # embed RPATH and RUNPATH to the binaries that assumes that everything is installed in the same directory
 #

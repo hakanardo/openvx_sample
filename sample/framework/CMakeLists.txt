@@ -51,7 +51,9 @@ if (NOT WIN32)
 	if (ANDROID)
 	    list( APPEND LINK_ADDITIONAL log )
 	else (ANDROID)
-	    list( APPEND LINK_ADDITIONAL pthread rt )
+		# TODO: removed librt for MacOS
+		#list( APPEND LINK_ADDITIONAL pthread rt )
+	  list( APPEND LINK_ADDITIONAL pthread )
 	endif (ANDROID)
 endif (NOT WIN32)
 
